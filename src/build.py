@@ -212,6 +212,7 @@ def main():
     write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
           "".join(f"  <url><loc>{BASE}{u}</loc><lastmod>{d}</lastmod></url>\n" for u, d in urls) + "</urlset>\n")
     write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n")
+    write("book/index.html", '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Book Your Intro | ' + e(S["name"]) + '</title><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0; url=' + e(S["booking_url"]) + '"></head><body><a href="' + e(S["booking_url"]) + '">Book your intro session</a></body></html>')
     write(".nojekyll", "")
     cname = os.path.join(ROOT, "CNAME")
     if S.get("custom_domain"): write("CNAME", S["custom_domain"] + "\n")

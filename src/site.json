@@ -1,7 +1,7 @@
 {
   "name": "Alloy Personal Training Buckhead",
   "base_url": "https://alloybuckhead.github.io",
-  "custom_domain": "",
+  "custom_domain": "alloybuckhead.com",
   "phone": "762-245-4442",
   "phone_e164": "+17622454442",
   "booking_url": "https://alloy.training/widget/booking/XWjCKfw6MFx37XLgvgm6",
@@ -10,5 +10,5 @@
   "region": "GA",
   "postal": "30305",
   "maps_url": "https://www.google.com/maps/search/?api=1&query=3330+Piedmont+Rd+NE+Suite+24+Atlanta+GA+30305",
-  "description": "Members-only small-group personal training in Buckhead, Atlanta. 45-minute coach-led sessions customized for every fitness level — strength for every decade."
+  "description": "Members-only small-group personal training in Buckhead, Atlanta. 45-minute coach-led sessions customized for every fitness level \u2014 strength for every decade."
 }
