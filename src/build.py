@@ -1,0 +1,223 @@
+#!/usr/bin/env python3
+"""Static site builder for Alloy Personal Training Buckhead.
+
+Usage: python3 src/build.py   (run from the repo root)
+Reads src/site.json and src/posts.json, writes the site to the repo root:
+index.html, blog/index.html, blog/<slug>/index.html, sitemap.xml, robots.txt,
+404.html, style.css, CNAME (if custom_domain set), .nojekyll.
+
+To add a post: insert a new object at the TOP of src/posts.json, then rebuild.
+"""
+import json, os, shutil, html, datetime
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SRC = os.path.join(ROOT, "src")
+S = json.load(open(os.path.join(SRC, "site.json")))
+POSTS = json.load(open(os.path.join(SRC, "posts.json")))
+POSTS.sort(key=lambda p: p["date"], reverse=True)
+
+BASE = ("https://" + S["custom_domain"]) if S.get("custom_domain") else S["base_url"].rstrip("/")
+e = lambda t: html.escape(str(t), quote=True)
+
+
+def fmt(d):
+    dt = datetime.date.fromisoformat(d)
+    return dt.strftime("%B ") + str(dt.day) + dt.strftime(", %Y")
+
+
+def excerpt(p):
+    return p.get("dek") or next((b["p"] for b in p["body"] if "p" in b), "")
+
+
+def ext(url, label, cls="btn"):
+    return f'<a class="{cls}" href="{e(url)}" target="_blank" rel="noopener">{label}</a>'
+
+
+def page(title, desc, path, body, jsonld=None, og_type="website"):
+    canon = BASE + path
+    ld = f'<script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>' if jsonld else ""
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{e(title)}</title>
+<meta name="description" content="{e(desc)}">
+<link rel="canonical" href="{e(canon)}">
+<meta property="og:type" content="{og_type}">
+<meta property="og:title" content="{e(title)}">
+<meta property="og:description" content="{e(desc)}">
+<meta property="og:url" content="{e(canon)}">
+<meta property="og:site_name" content="{e(S['name'])}">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23EBE821'/%3E%3Ctext x='16' y='23' font-family='Arial' font-weight='900' font-size='20' text-anchor='middle' fill='%23221E1F'%3EA%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+{ld}
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="/"><span class="brand-mark">A</span><span class="brand-name">Alloy Personal Training<small>Buckhead</small></span></a>
+  <nav class="links"><a href="/">Home</a><a href="/blog/">Blog</a><a href="/#visit">Visit</a>{ext(S['booking_url'], 'Book an Intro', 'btn sm')}</nav>
+</div></header>
+{body}
+<footer><div class="wrap">
+  <div>© {datetime.date.today().year} {e(S['name'])} · {e(S['street'])}, {e(S['city'])}, {e(S['region'])} {e(S['postal'])} · <a href="tel:{e(S['phone_e164'])}">{e(S['phone'])}</a></div>
+  <div class="disc">Blog content is for general education and isn't medical advice. Talk with your doctor before starting a new exercise or nutrition program.</div>
+</div></footer>
+</body>
+</html>
+"""
+
+
+def card(p):
+    return f"""<a class="post-card" data-cat="{e(p['category'])}" href="/blog/{e(p['slug'])}/"><div class="bar"></div><div class="body">
+    <span class="tag">{e(p['category'])} · {fmt(p['date'])}</span>
+    <h3>{e(p['title'])}</h3><p>{e(excerpt(p))}</p><span class="more">Read post →</span></div></a>"""
+
+
+BUSINESS = {
+    "@context": "https://schema.org", "@type": "HealthClub", "name": S["name"],
+    "description": S["description"], "url": BASE + "/", "telephone": S["phone_e164"],
+    "address": {"@type": "PostalAddress", "streetAddress": S["street"], "addressLocality": S["city"],
+                "addressRegion": S["region"], "postalCode": S["postal"], "addressCountry": "US"},
+    "areaServed": "Buckhead, Atlanta, GA",
+}
+
+
+def home():
+    latest = "".join(card(p) for p in POSTS[:3]) or '<p class="empty">First post coming soon.</p>'
+    body = f"""<main>
+  <section class="hero" style="padding:0">
+    <div class="hero-bars" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="wrap">
+      <div class="eyebrow">Members-only small-group training · Buckhead, Atlanta</div>
+      <h1>Strength for <span>every</span> decade.</h1>
+      <p class="lede">45-minute, coach-led personal training sessions in Buckhead built around you — whether you're 25 or 75, brand new or getting back to it. Small groups. Real coaching. Results that last.</p>
+      <div class="ctas">{ext(S['booking_url'], 'Book Your Intro Session')}<a class="btn ghost" href="/blog/">Read the Blog</a></div>
+    </div>
+  </section>
+  <div class="stats"><div class="wrap">
+    <div class="stat"><b>45</b><span>Minute sessions</span></div>
+    <div class="stat"><b>150</b><span>Member cap</span></div>
+    <div class="stat"><b>30+</b><span>Years of Alloy</span></div>
+    <div class="stat"><b>100%</b><span>Coach-led</span></div>
+  </div></div>
+  <section><div class="wrap">
+    <div class="sec-head"><div class="kicker">The Alloy difference</div>
+      <h2>Personal training, without the personal-training price.</h2>
+      <p>Every session is led by a certified coach and scaled to your level — so you get the attention of one-on-one training with the energy of a small group.</p></div>
+    <div class="grid3">
+      <div class="card"><span class="num">01</span><h3>Small groups</h3><p>Coaches know your name, your goals, and your limits. Nobody gets lost in the crowd.</p></div>
+      <div class="card"><span class="num">02</span><h3>Customized</h3><p>Every workout is adjusted for your fitness level, history and goals — not a one-size class.</p></div>
+      <div class="card"><span class="num">03</span><h3>Members only</h3><p>Membership is capped at 150, so the studio stays personal and coaching stays hands-on.</p></div>
+    </div>
+  </div></section>
+  <section class="who"><div class="wrap">
+    <div class="sec-head"><div class="kicker">Who we train</div><h2>Built for real schedules and real lives.</h2></div>
+    <div class="grid3">
+      <div class="card"><h3>Busy professionals</h3><p>Efficient 45-minute sessions that fit before work, at lunch, or after the day is done.</p></div>
+      <div class="card"><h3>Moms</h3><p>Rebuild strength and energy with coaching that respects where you are right now.</p></div>
+      <div class="card"><h3>Active agers</h3><p>Strength, balance and mobility training to keep you doing what you love for decades.</p></div>
+    </div>
+  </div></section>
+  <section class="how"><div class="wrap">
+    <div class="sec-head"><div class="kicker">How it works</div><h2>Getting started is simple.</h2>
+      <p>No intimidation, no guesswork. Here's what your first steps look like.</p></div>
+    <div class="grid3">
+      <div class="card"><span class="num">STEP 1</span><h3>Book an intro</h3><p>Meet a coach, tour the studio and talk through your goals.</p></div>
+      <div class="card"><span class="num">STEP 2</span><h3>Get your plan</h3><p>We assess where you're starting and map out the right membership for you.</p></div>
+      <div class="card"><span class="num">STEP 3</span><h3>Train &amp; progress</h3><p>Show up, get coached, and watch your strength build week over week.</p></div>
+    </div>
+  </div></section>
+  <section><div class="wrap">
+    <div class="sec-head"><div class="kicker">From the blog</div><h2>Latest from the studio.</h2>
+      <p>Practical tips on strength, longevity, nutrition and staying consistent — new posts every day.</p></div>
+    <div class="posts">{latest}</div>
+    <div style="margin-top:32px"><a class="btn" href="/blog/" style="background:var(--char);color:var(--white)">See All Posts</a></div>
+  </div></section>
+  <section class="visit" id="visit"><div class="wrap inner">
+    <div><div class="kicker">Visit the studio</div>
+      <h2 class="display" style="font-size:clamp(32px,4.5vw,52px);font-weight:900;text-transform:uppercase">Your first session starts with a conversation.</h2>
+      <p style="color:var(--muted);margin-top:16px;font-size:17px">Stop by, meet the coaches and see if {e(S['name'])} is the right fit. Spots are limited — membership is capped at 150.</p></div>
+    <div class="addr"><h3>{e(S['name'])}</h3>
+      <p>{e(S['street'])}<br>{e(S['city'])}, {e(S['region'])} {e(S['postal'])}</p>
+      <p style="font:800 22px Archivo;color:var(--yellow);margin-bottom:24px"><a href="tel:{e(S['phone_e164'])}" style="text-decoration:none">{e(S['phone'])}</a></p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">{ext(S['booking_url'], 'Book Online')}<a class="btn ghost" href="tel:{e(S['phone_e164'])}">Call to Book</a>{ext(S['maps_url'], 'Get Directions', 'btn ghost')}</div>
+    </div>
+  </div></section>
+</main>"""
+    return page(f"{S['name']} | Small-Group Personal Training in Buckhead, Atlanta", S["description"], "/", body, BUSINESS)
+
+
+def blog_index():
+    cats = ["All"] + sorted({p["category"] for p in POSTS})
+    btns = "".join(f'<button class="{"on" if c == "All" else ""}" data-cat="{e(c)}">{e(c)}</button>' for c in cats)
+    cards = "".join(card(p) for p in POSTS) or '<p class="empty">No posts yet.</p>'
+    body = f"""<main>
+  <div class="blog-hero"><div class="wrap"><div class="eyebrow">The Alloy Blog</div><h1>Stronger every day.</h1>
+    <p>Daily, no-fluff advice from {e(S['name'])} on training, longevity, nutrition and habits that stick.</p></div></div>
+  <div class="wrap"><div class="filters" id="filters">{btns}</div><div class="posts" id="all-posts">{cards}</div><div style="height:96px"></div></div>
+</main>
+<script>
+document.querySelectorAll('#filters button').forEach(function(b){{b.addEventListener('click',function(){{
+  document.querySelectorAll('#filters button').forEach(function(x){{x.classList.toggle('on',x===b)}});
+  var c=b.dataset.cat;document.querySelectorAll('#all-posts .post-card').forEach(function(p){{p.style.display=(c==='All'||p.dataset.cat===c)?'':'none'}});
+}})}});
+</script>"""
+    return page(f"Blog | {S['name']}", f"Daily strength, longevity, nutrition and habit tips from {S['name']} in Atlanta.", "/blog/", body)
+
+
+def post_page(p):
+    parts = []
+    for b in p["body"]:
+        if "h" in b: parts.append(f"<h2>{e(b['h'])}</h2>")
+        elif "ul" in b: parts.append("<ul>" + "".join(f"<li>{e(i)}</li>" for i in b["ul"]) + "</ul>")
+        else: parts.append(f"<p>{e(b['p'])}</p>")
+    ld = {"@context": "https://schema.org", "@type": "BlogPosting", "headline": p["title"], "description": p.get("dek", ""),
+          "datePublished": p["date"], "dateModified": p["date"], "mainEntityOfPage": f"{BASE}/blog/{p['slug']}/",
+          "author": {"@type": "Organization", "name": S["name"]},
+          "publisher": {"@type": "Organization", "name": S["name"]}}
+    body = f"""<main><article class="post">
+  <a class="back" href="/blog/">← All posts</a>
+  <div class="meta"><span class="tag">{e(p['category'])}</span><span class="tag"><time datetime="{e(p['date'])}">{fmt(p['date'])}</time></span></div>
+  <h1>{e(p['title'])}</h1><p class="dek">{e(p.get('dek',''))}</p>
+  {''.join(parts)}
+  <div class="post-cta"><b>Ready to train with a coach?</b>{ext(S['booking_url'], 'Book Your Intro')}</div>
+</article></main>"""
+    return page(f"{p['title']} | {S['name']}", excerpt(p), f"/blog/{p['slug']}/", body, ld, "article")
+
+
+def write(rel, text):
+    path = os.path.join(ROOT, rel)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    open(path, "w", encoding="utf-8").write(text)
+
+
+def main():
+    slugs = [p["slug"] for p in POSTS]
+    assert len(slugs) == len(set(slugs)), "duplicate slug in posts.json"
+    blog_dir = os.path.join(ROOT, "blog")
+    if os.path.isdir(blog_dir): shutil.rmtree(blog_dir)
+    shutil.copy(os.path.join(SRC, "style.css"), os.path.join(ROOT, "style.css"))
+    write("index.html", home())
+    write("blog/index.html", blog_index())
+    for p in POSTS: write(f"blog/{p['slug']}/index.html", post_page(p))
+    write("404.html", page(f"Page not found | {S['name']}", S["description"], "/404.html",
+          '<main><article class="post"><h1>Page not found.</h1><p>That page doesn\'t exist. <a href="/">Go home</a> or <a href="/blog/">read the blog</a>.</p></article></main>'))
+    today = datetime.date.today().isoformat()
+    urls = [("/", today), ("/blog/", POSTS[0]["date"] if POSTS else today)] + [(f"/blog/{p['slug']}/", p["date"]) for p in POSTS]
+    write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+          "".join(f"  <url><loc>{BASE}{u}</loc><lastmod>{d}</lastmod></url>\n" for u, d in urls) + "</urlset>\n")
+    write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n")
+    write(".nojekyll", "")
+    cname = os.path.join(ROOT, "CNAME")
+    if S.get("custom_domain"): write("CNAME", S["custom_domain"] + "\n")
+    elif os.path.exists(cname): os.remove(cname)
+    print(f"Built {len(POSTS)} posts → {BASE}")
+
+
+if __name__ == "__main__":
+    main()
