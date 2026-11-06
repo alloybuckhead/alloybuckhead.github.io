@@ -2,8 +2,8 @@
 """Static site builder for Alloy Personal Training Buckhead.
 
 Usage: python3 src/build.py   (run from the repo root)
-Reads src/site.json and src/posts.json, writes the site to the repo root:
-index.html, blog/index.html, blog/<slug>/index.html, sitemap.xml, robots.txt,
+Reads src/site.json and src/posts.json, writes the blog to the repo root:
+index.html (blog home), blog/index.html (redirect), blog/<slug>/index.html, sitemap.xml, robots.txt,
 404.html, style.css, CNAME (if custom_domain set), .nojekyll.
 
 To add a post: insert a new object at the TOP of src/posts.json, then rebuild.
@@ -59,8 +59,8 @@ def page(title, desc, path, body, jsonld=None, og_type="website"):
 </head>
 <body>
 <header class="nav"><div class="wrap">
-  <a class="brand" href="/"><span class="brand-mark">A</span><span class="brand-name">Alloy Personal Training<small>Buckhead</small></span></a>
-  <nav class="links"><a href="/">Home</a><a href="/blog/">Blog</a><a href="/#visit">Visit</a>{ext(S['booking_url'], 'Book an Intro', 'btn sm')}</nav>
+  <a class="brand" href="/"><span class="brand-mark">A</span><span class="brand-name">Alloy Personal Training<small>Buckhead · Blog</small></span></a>
+  <nav class="links"><a href="/">Blog</a>{ext(S['official_url'], 'Main Site', '')}{ext(S['booking_url'], 'Book an Intro', 'btn sm')}</nav>
 </div></header>
 {body}
 <footer><div class="wrap">
@@ -158,7 +158,8 @@ def blog_index():
     cards = "".join(card(p) for p in POSTS) or '<p class="empty">No posts yet.</p>'
     body = f"""<main>
   <div class="blog-hero"><div class="wrap"><div class="eyebrow">The Alloy Blog</div><h1>Stronger every day.</h1>
-    <p>Daily, no-fluff advice from {e(S['name'])} on training, longevity, nutrition and habits that stick.</p></div></div>
+    <p>Daily, no-fluff advice from {e(S['name'])} on training, longevity, nutrition and habits that stick — from our coaches at 3330 Piedmont Rd NE in Buckhead, Atlanta.</p>
+    <div class="ctas" style="display:flex;gap:14px;flex-wrap:wrap;margin-top:28px">{ext(S['booking_url'], 'Book Your Intro Session')}{ext(S['official_url'], 'Visit Our Studio Site', 'btn ghost')}</div></div></div>
   <div class="wrap"><div class="filters" id="filters">{btns}</div><div class="posts" id="all-posts">{cards}</div><div style="height:96px"></div></div>
 </main>
 <script>
@@ -167,7 +168,9 @@ document.querySelectorAll('#filters button').forEach(function(b){{b.addEventList
   var c=b.dataset.cat;document.querySelectorAll('#all-posts .post-card').forEach(function(p){{p.style.display=(c==='All'||p.dataset.cat===c)?'':'none'}});
 }})}});
 </script>"""
-    return page(f"Blog | {S['name']}", f"Daily strength, longevity, nutrition and habit tips from {S['name']} in Atlanta.", "/blog/", body)
+    blog_ld = {"@context": "https://schema.org", "@type": "Blog", "name": f"{S['name']} Blog", "url": BASE + "/",
+               "publisher": {"@type": "Organization", "name": S["name"], "url": S["official_url"]}}
+    return page(f"{S['name']} Blog | Strength & Longevity Tips, Buckhead Atlanta", f"Daily strength, longevity, nutrition and habit tips from {S['name']} in Buckhead, Atlanta.", "/", body, blog_ld)
 
 
 def post_page(p):
@@ -178,14 +181,14 @@ def post_page(p):
         else: parts.append(f"<p>{e(b['p'])}</p>")
     ld = {"@context": "https://schema.org", "@type": "BlogPosting", "headline": p["title"], "description": p.get("dek", ""),
           "datePublished": p["date"], "dateModified": p["date"], "mainEntityOfPage": f"{BASE}/blog/{p['slug']}/",
-          "author": {"@type": "Organization", "name": S["name"]},
-          "publisher": {"@type": "Organization", "name": S["name"]}}
+          "author": {"@type": "Organization", "name": S["name"], "url": S["official_url"]},
+          "publisher": {"@type": "Organization", "name": S["name"], "url": S["official_url"]}}
     body = f"""<main><article class="post">
-  <a class="back" href="/blog/">← All posts</a>
+  <a class="back" href="/">← All posts</a>
   <div class="meta"><span class="tag">{e(p['category'])}</span><span class="tag"><time datetime="{e(p['date'])}">{fmt(p['date'])}</time></span></div>
   <h1>{e(p['title'])}</h1><p class="dek">{e(p.get('dek',''))}</p>
   {''.join(parts)}
-  <div class="post-cta"><b>Ready to train with a coach?</b>{ext(S['booking_url'], 'Book Your Intro')}</div>
+  <div class="post-cta"><b>Ready to train with a coach?</b><div style="display:flex;gap:12px;flex-wrap:wrap">{ext(S['booking_url'], 'Book Your Intro')}{ext(S['official_url'], 'About the Studio', 'btn ghost')}</div></div>
 </article></main>"""
     return page(f"{p['title']} | {S['name']}", excerpt(p), f"/blog/{p['slug']}/", body, ld, "article")
 
@@ -202,13 +205,13 @@ def main():
     blog_dir = os.path.join(ROOT, "blog")
     if os.path.isdir(blog_dir): shutil.rmtree(blog_dir)
     shutil.copy(os.path.join(SRC, "style.css"), os.path.join(ROOT, "style.css"))
-    write("index.html", home())
-    write("blog/index.html", blog_index())
+    write("index.html", blog_index())
+    write("blog/index.html", '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Blog</title><link rel="canonical" href="' + BASE + '/"><meta http-equiv="refresh" content="0; url=/"></head><body><a href="/">Blog</a></body></html>')
     for p in POSTS: write(f"blog/{p['slug']}/index.html", post_page(p))
     write("404.html", page(f"Page not found | {S['name']}", S["description"], "/404.html",
-          '<main><article class="post"><h1>Page not found.</h1><p>That page doesn\'t exist. <a href="/">Go home</a> or <a href="/blog/">read the blog</a>.</p></article></main>'))
+          '<main><article class="post"><h1>Page not found.</h1><p>That page doesn\'t exist. <a href="/">Read the blog</a> or visit <a href="https://buckhead.alloypersonaltraining.com/">our studio site</a>.</p></article></main>'))
     today = datetime.date.today().isoformat()
-    urls = [("/", today), ("/blog/", POSTS[0]["date"] if POSTS else today)] + [(f"/blog/{p['slug']}/", p["date"]) for p in POSTS]
+    urls = [("/", POSTS[0]["date"] if POSTS else today)] + [(f"/blog/{p['slug']}/", p["date"]) for p in POSTS]
     write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
           "".join(f"  <url><loc>{BASE}{u}</loc><lastmod>{d}</lastmod></url>\n" for u, d in urls) + "</urlset>\n")
     write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n")
