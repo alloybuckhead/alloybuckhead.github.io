@@ -206,7 +206,7 @@ def post_page(p):
   <div class="meta"><span class="tag">{e(p['category'])}</span><span class="tag"><time datetime="{e(p['date'])}">{fmt(p['date'])}</time></span></div>
   <h1>{e(p['title'])}</h1><p class="dek">{e(p.get('dek',''))}</p>
   {''.join(parts)}
-  {guide_cta('blog-' + p['slug'])}
+  {(bundle_cta('blog-' + p['slug']) if p.get('bundle') and bundle_on() else guide_cta('blog-' + p['slug']))}
   <div class="post-cta"><b>Ready to train with a coach?</b>{ext(book('blog-' + p['slug']), 'Book Your Intro')}</div>
 </article></main>"""
     return page(f"{p['title']} | {S['name']}", excerpt(p), f"/blog/{p['slug']}/", body, ld, "article")
@@ -247,6 +247,63 @@ def landing(pg):
   </div></section>
 </main>"""
     return page(f"{pg['title']} | {S['name']}", pg["meta"], f"/{pg['slug']}/", body, ld)
+
+
+def form_iframe(fid, name):
+    host = S["form_host"]
+    return f"""<iframe src="{host}/widget/form/{fid}" style="width:100%;height:924px;border:none;border-radius:8px"
+        id="inline-{fid}" data-layout="{{'id':'INLINE'}}" data-trigger-type="alwaysShow" data-trigger-value=""
+        data-activation-type="alwaysActivated" data-activation-value="" data-deactivation-type="neverDeactivate"
+        data-deactivation-value="" data-form-name="{e(name)}" data-height="924"
+        data-layout-iframe-id="inline-{fid}" data-form-id="{fid}" data-cookie-consent="true"
+        data-cookie-consent-provider="auto" title="{e(name)}"></iframe>
+      <script src="{host}/js/form_embed.js"></script>"""
+
+
+def bundle_on():
+    return bool(S.get("bundle_form_id"))
+
+
+def bundle_cta(campaign):
+    return (f'<div class="post-cta guide-cta"><div><b>Free: two strength guides</b>'
+            f'<p>Strong on a GLP-1 and Strong Through Menopause. Simple plans you can start this week.</p></div>'
+            f'<a class="btn" href="/strength-guides/?utm_source=alloybuckhead.com&utm_medium=website&utm_campaign={campaign}">Get Both Free Guides</a></div>')
+
+
+def bundle_page():
+    body = f"""<main>
+  <section class="hero" style="padding:0">
+    <div class="hero-bars" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="wrap">
+      <div class="eyebrow">Two free guides · {e(S['name'])}</div>
+      <h1 style="max-width:16ch">Two free strength guides.</h1>
+      <p class="lede">Two practical guides from our coaches: how to protect your muscle on a GLP-1 medication, and how to use weight training to protect muscle and bone through menopause. Tell us where to send them, free.</p>
+    </div>
+  </section>
+  <section style="padding:56px 0 96px"><div class="wrap guide-grid">
+    <div>
+      <div class="kicker">Guide 1</div>
+      <h2 class="display" style="font:900 clamp(24px,3vw,34px) Archivo;text-transform:uppercase;margin:10px 0 12px">Strong on a GLP-1</h2>
+      <ul class="guide-list">
+        <li>What happens to muscle during fast weight loss</li>
+        <li>A twice-weekly starter strength routine</li>
+        <li>Easy protein ideas for a smaller appetite</li>
+      </ul>
+      <div class="kicker" style="margin-top:32px">Guide 2</div>
+      <h2 class="display" style="font:900 clamp(24px,3vw,34px) Archivo;text-transform:uppercase;margin:10px 0 12px">Strong Through Menopause</h2>
+      <ul class="guide-list">
+        <li>What falling estrogen does to muscle and bone</li>
+        <li>The kind of training bone responds to</li>
+        <li>A twice-weekly routine and how heavy to go</li>
+      </ul>
+      <p style="color:var(--muted);margin-top:20px">From the coaches at {e(S['name'])}, {e(S['street'])}, {e(S['city'])}, {e(S['region'])}.</p>
+    </div>
+    <div class="guide-form">{form_iframe(S["bundle_form_id"], "GLP-1 and Menopause Strength Guides")}</div>
+  </div></section>
+</main>"""
+    return page(f"Free GLP-1 & Menopause Strength Guides | {S['name']}",
+                f"Free guides from {S['name']}: protect your muscle on a GLP-1 medication and use weight training through menopause.",
+                "/strength-guides/", body)
 
 
 def guide_page():
@@ -307,10 +364,11 @@ def main():
         if os.path.isdir(d): shutil.rmtree(d)
         write(f"{pg['slug']}/index.html", landing(pg))
     write("guide/index.html", guide_page())
+    if bundle_on(): write("strength-guides/index.html", bundle_page())
     write("404.html", page(f"Page not found | {S['name']}", S["description"], "/404.html",
           '<main><article class="post"><h1>Page not found.</h1><p>That page doesn\'t exist. <a href="/">Go home</a> or <a href="/blog/">read the blog</a>.</p></article></main>'))
     today = datetime.date.today().isoformat()
-    urls = [("/", today), ("/blog/", POSTS[0]["date"] if POSTS else today)] + [("/guide/", today)] + [(f"/{pg['slug']}/", today) for pg in PAGES] + [(f"/blog/{p['slug']}/", p["date"]) for p in POSTS]
+    urls = [("/", today), ("/blog/", POSTS[0]["date"] if POSTS else today)] + [("/guide/", today)] + ([("/strength-guides/", today)] if bundle_on() else []) + [(f"/{pg['slug']}/", today) for pg in PAGES] + [(f"/blog/{p['slug']}/", p["date"]) for p in POSTS]
     write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
           "".join(f"  <url><loc>{BASE}{u}</loc><lastmod>{d}</lastmod></url>\n" for u, d in urls) + "</urlset>\n")
     write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n")
