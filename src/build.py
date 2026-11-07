@@ -36,6 +36,17 @@ def book(campaign):
     return f"{S['booking_url']}{sep}utm_source=alloybuckhead.com&utm_medium=website&utm_campaign={campaign}"
 
 
+def guide(campaign):
+    """Link to the Longevity Strength Guide page, tagged so GoHighLevel shows where the lead came from."""
+    return f"/guide/?utm_source=alloybuckhead.com&utm_medium=website&utm_campaign={campaign}"
+
+
+def guide_cta(campaign, cls="post-cta guide-cta"):
+    return (f'<div class="{cls}"><div><b>Free: The Longevity Strength Guide</b>'
+            f'<p>Simple strength habits to stay strong, steady and independent for decades.</p></div>'
+            f'<a class="btn" href="{guide(campaign)}">Get the Free Guide</a></div>')
+
+
 def ext(url, label, cls="btn"):
     return f'<a class="{cls}" href="{e(url)}" target="_blank" rel="noopener">{label}</a>'
 
@@ -67,7 +78,7 @@ def page(title, desc, path, body, jsonld=None, og_type="website"):
 <body>
 <header class="nav"><div class="wrap">
   <a class="brand" href="/"><span class="brand-mark">A</span><span class="brand-name">Alloy Personal Training<small>Buckhead</small></span></a>
-  <nav class="links"><a href="/">Home</a><a href="/blog/">Blog</a><a href="/#visit">Visit</a>{ext(book('nav'), 'Book an Intro', 'btn sm')}</nav>
+  <nav class="links"><a href="/">Home</a><a href="/blog/">Blog</a><a href="/guide/">Free Guide</a><a href="/#visit">Visit</a>{ext(book('nav'), 'Book an Intro', 'btn sm')}</nav>
 </div></header>
 {body}
 <footer><div class="wrap">
@@ -147,6 +158,7 @@ def home():
     <div class="posts">{latest}</div>
     <div style="margin-top:32px"><a class="btn" href="/blog/" style="background:var(--char);color:var(--white)">See All Posts</a></div>
   </div></section>
+  <section style="padding:0 0 72px"><div class="wrap">{guide_cta('home-guide')}</div></section>
   <section class="visit" id="visit"><div class="wrap inner">
     <div><div class="kicker">Visit the studio</div>
       <h2 class="display" style="font-size:clamp(32px,4.5vw,52px);font-weight:900;text-transform:uppercase">Your first session starts with a conversation.</h2>
@@ -194,6 +206,7 @@ def post_page(p):
   <div class="meta"><span class="tag">{e(p['category'])}</span><span class="tag"><time datetime="{e(p['date'])}">{fmt(p['date'])}</time></span></div>
   <h1>{e(p['title'])}</h1><p class="dek">{e(p.get('dek',''))}</p>
   {''.join(parts)}
+  {guide_cta('blog-' + p['slug'])}
   <div class="post-cta"><b>Ready to train with a coach?</b>{ext(book('blog-' + p['slug']), 'Book Your Intro')}</div>
 </article></main>"""
     return page(f"{p['title']} | {S['name']}", excerpt(p), f"/blog/{p['slug']}/", body, ld, "article")
@@ -223,6 +236,7 @@ def landing(pg):
   <article class="post" style="padding-top:56px">
     <h1 style="font-size:clamp(28px,4vw,40px)">{e(pg['title'])}</h1>
     {''.join(parts)}
+    {guide_cta('page-' + pg['slug'])}
     <h2>Frequently asked questions</h2>
     {faq}
     <div class="post-cta"><b>Start with a free intro session</b>{ext(book('page-' + pg['slug'] + '-bottom'), 'Book Your Free Intro')}</div>
@@ -233,6 +247,44 @@ def landing(pg):
   </div></section>
 </main>"""
     return page(f"{pg['title']} | {S['name']}", pg["meta"], f"/{pg['slug']}/", body, ld)
+
+
+def guide_page():
+    fid, host = S["guide_form_id"], S["form_host"]
+    body = f"""<main>
+  <section class="hero" style="padding:0">
+    <div class="hero-bars" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="wrap">
+      <div class="eyebrow">Free guide · {e(S['name'])}</div>
+      <h1 style="max-width:16ch">The Longevity Strength Guide.</h1>
+      <p class="lede">Practical strength training for adults who want to stay strong, steady and independent for decades. Tell us where to send it and it's yours, free.</p>
+    </div>
+  </section>
+  <section style="padding:56px 0 96px"><div class="wrap guide-grid">
+    <div>
+      <div class="kicker">What's inside</div>
+      <h2 class="display" style="font:900 clamp(28px,3.5vw,40px) Archivo;text-transform:uppercase;margin:12px 0 16px">Strength for every decade.</h2>
+      <ul class="guide-list">
+        <li>Why strength is the foundation of healthy aging</li>
+        <li>How to start safely, whatever your age or fitness level</li>
+        <li>Simple habits that build strength, balance and confidence</li>
+      </ul>
+      <p style="color:var(--muted);margin-top:20px">From the coaches at {e(S['name'])}, {e(S['street'])}, {e(S['city'])}, {e(S['region'])}.</p>
+    </div>
+    <div class="guide-form">
+      <iframe src="{host}/widget/form/{fid}" style="width:100%;height:924px;border:none;border-radius:8px"
+        id="inline-{fid}" data-layout="{{'id':'INLINE'}}" data-trigger-type="alwaysShow" data-trigger-value=""
+        data-activation-type="alwaysActivated" data-activation-value="" data-deactivation-type="neverDeactivate"
+        data-deactivation-value="" data-form-name="Longevity Strength Guide" data-height="924"
+        data-layout-iframe-id="inline-{fid}" data-form-id="{fid}" data-cookie-consent="true"
+        data-cookie-consent-provider="auto" title="Longevity Strength Guide"></iframe>
+      <script src="{host}/js/form_embed.js"></script>
+    </div>
+  </div></section>
+</main>"""
+    return page(f"Free Longevity Strength Guide | {S['name']}",
+                f"Get the free Longevity Strength Guide from {S['name']}: practical strength training to stay strong, steady and independent as you age.",
+                "/guide/", body)
 
 
 def write(rel, text):
@@ -254,10 +306,11 @@ def main():
         d = os.path.join(ROOT, pg["slug"])
         if os.path.isdir(d): shutil.rmtree(d)
         write(f"{pg['slug']}/index.html", landing(pg))
+    write("guide/index.html", guide_page())
     write("404.html", page(f"Page not found | {S['name']}", S["description"], "/404.html",
           '<main><article class="post"><h1>Page not found.</h1><p>That page doesn\'t exist. <a href="/">Go home</a> or <a href="/blog/">read the blog</a>.</p></article></main>'))
     today = datetime.date.today().isoformat()
-    urls = [("/", today), ("/blog/", POSTS[0]["date"] if POSTS else today)] + [(f"/{pg['slug']}/", today) for pg in PAGES] + [(f"/blog/{p['slug']}/", p["date"]) for p in POSTS]
+    urls = [("/", today), ("/blog/", POSTS[0]["date"] if POSTS else today)] + [("/guide/", today)] + [(f"/{pg['slug']}/", today) for pg in PAGES] + [(f"/blog/{p['slug']}/", p["date"]) for p in POSTS]
     write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
           "".join(f"  <url><loc>{BASE}{u}</loc><lastmod>{d}</lastmod></url>\n" for u, d in urls) + "</urlset>\n")
     write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n")
