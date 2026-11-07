@@ -114,3 +114,26 @@ article.post li{margin-bottom:8px}
 .post-cta{margin-top:48px;background:var(--char);color:var(--white);padding:32px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
 .post-cta b{font:800 20px Archivo;text-transform:uppercase}
 .empty{color:var(--muted);padding:40px 0}
+
+/* footer links */
+.foot-links{display:flex;flex-direction:column;gap:6px}
+.foot-links b{color:#fff;font:800 12px Archivo;letter-spacing:.1em;text-transform:uppercase}
+.foot-links a{color:#A9A3A1;text-decoration:none}
+.foot-links a:hover{color:var(--yellow)}
+
+/* FAQ */
+details.faq{border-top:1px solid var(--line);padding:16px 0}
+details.faq:last-of-type{border-bottom:1px solid var(--line)}
+details.faq summary{font:800 18px Archivo;cursor:pointer;list-style:none}
+details.faq summary::after{content:"+";float:right;color:var(--muted)}
+details.faq[open] summary::after{content:"–"}
+details.faq p{margin:10px 0 0;font-size:17px;color:var(--muted)}
+
+/* sticky mobile booking bar */
+.sticky-cta{display:none}
+@media (max-width:760px){
+  .sticky-cta{display:flex;gap:8px;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--char);padding:10px 12px calc(10px + env(safe-area-inset-bottom));box-shadow:0 -4px 16px rgba(0,0,0,.25)}
+  .sticky-cta .btn{flex:1;text-align:center;padding:12px 8px;font-size:12px}
+  .sticky-cta .btn:first-child{flex:1.6}
+  body{padding-bottom:76px}
+}

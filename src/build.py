@@ -15,6 +15,7 @@ SRC = os.path.join(ROOT, "src")
 S = json.load(open(os.path.join(SRC, "site.json")))
 POSTS = json.load(open(os.path.join(SRC, "posts.json")))
 POSTS.sort(key=lambda p: p["date"], reverse=True)
+PAGES = json.load(open(os.path.join(SRC, "pages.json")))
 
 BASE = ("https://" + S["custom_domain"]) if S.get("custom_domain") else S["base_url"].rstrip("/")
 e = lambda t: html.escape(str(t), quote=True)
@@ -27,6 +28,12 @@ def fmt(d):
 
 def excerpt(p):
     return p.get("dek") or next((b["p"] for b in p["body"] if "p" in b), "")
+
+
+def book(campaign):
+    """Booking link tagged so GoHighLevel shows which page/button the lead came from."""
+    sep = "&" if "?" in S["booking_url"] else "?"
+    return f"{S['booking_url']}{sep}utm_source=alloybuckhead.com&utm_medium=website&utm_campaign={campaign}"
 
 
 def ext(url, label, cls="btn"):
@@ -60,13 +67,15 @@ def page(title, desc, path, body, jsonld=None, og_type="website"):
 <body>
 <header class="nav"><div class="wrap">
   <a class="brand" href="/"><span class="brand-mark">A</span><span class="brand-name">Alloy Personal Training<small>Buckhead</small></span></a>
-  <nav class="links"><a href="/">Home</a><a href="/blog/">Blog</a><a href="/#visit">Visit</a>{ext(S['booking_url'], 'Book an Intro', 'btn sm')}</nav>
+  <nav class="links"><a href="/">Home</a><a href="/blog/">Blog</a><a href="/#visit">Visit</a>{ext(book('nav'), 'Book an Intro', 'btn sm')}</nav>
 </div></header>
 {body}
 <footer><div class="wrap">
   <div>© {datetime.date.today().year} {e(S['name'])} · {e(S['street'])}, {e(S['city'])}, {e(S['region'])} {e(S['postal'])} · <a href="tel:{e(S['phone_e164'])}">{e(S['phone'])}</a></div>
+  <div class="foot-links"><b>Training in Buckhead</b>{''.join(f'<a href="/{e(x["slug"])}/">{e(x["title"])}</a>' for x in PAGES)}</div>
   <div class="disc">Blog content is for general education and isn't medical advice. Talk with your doctor before starting a new exercise or nutrition program.</div>
 </div></footer>
+<div class="sticky-cta">{ext(book('sticky-mobile'), 'Book Free Intro')}<a class="btn ghost" href="sms:{e(S['phone_e164'])}">Text Us</a><a class="btn ghost" href="tel:{e(S['phone_e164'])}">Call</a></div>
 </body>
 </html>
 """
@@ -96,7 +105,7 @@ def home():
       <div class="eyebrow">Members-only small-group training · Buckhead, Atlanta</div>
       <h1>Strength for <span>every</span> decade.</h1>
       <p class="lede">45-minute, coach-led personal training sessions in Buckhead built around you — whether you're 25 or 75, brand new or getting back to it. Small groups. Real coaching. Results that last.</p>
-      <div class="ctas">{ext(S['booking_url'], 'Book Your Intro Session')}<a class="btn ghost" href="/blog/">Read the Blog</a></div>
+      <div class="ctas">{ext(book('home-hero'), 'Book Your Intro Session')}<a class="btn ghost" href="/blog/">Read the Blog</a></div>
     </div>
   </section>
   <div class="stats"><div class="wrap">
@@ -145,7 +154,7 @@ def home():
     <div class="addr"><h3>{e(S['name'])}</h3>
       <p>{e(S['street'])}<br>{e(S['city'])}, {e(S['region'])} {e(S['postal'])}</p>
       <p style="font:800 22px Archivo;color:var(--yellow);margin-bottom:24px"><a href="tel:{e(S['phone_e164'])}" style="text-decoration:none">{e(S['phone'])}</a></p>
-      <div style="display:flex;gap:12px;flex-wrap:wrap">{ext(S['booking_url'], 'Book Online')}<a class="btn ghost" href="tel:{e(S['phone_e164'])}">Call to Book</a>{ext(S['maps_url'], 'Get Directions', 'btn ghost')}</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">{ext(book('home-visit'), 'Book Online')}<a class="btn ghost" href="tel:{e(S['phone_e164'])}">Call to Book</a>{ext(S['maps_url'], 'Get Directions', 'btn ghost')}</div>
     </div>
   </div></section>
 </main>"""
@@ -185,9 +194,45 @@ def post_page(p):
   <div class="meta"><span class="tag">{e(p['category'])}</span><span class="tag"><time datetime="{e(p['date'])}">{fmt(p['date'])}</time></span></div>
   <h1>{e(p['title'])}</h1><p class="dek">{e(p.get('dek',''))}</p>
   {''.join(parts)}
-  <div class="post-cta"><b>Ready to train with a coach?</b>{ext(S['booking_url'], 'Book Your Intro')}</div>
+  <div class="post-cta"><b>Ready to train with a coach?</b>{ext(book('blog-' + p['slug']), 'Book Your Intro')}</div>
 </article></main>"""
     return page(f"{p['title']} | {S['name']}", excerpt(p), f"/blog/{p['slug']}/", body, ld, "article")
+
+
+def landing(pg):
+    parts = []
+    for s in pg["sections"]:
+        parts.append(f"<h2>{e(s['h'])}</h2>")
+        for para in s.get("p", []): parts.append(f"<p>{e(para)}</p>")
+        if s.get("ul"): parts.append("<ul>" + "".join(f"<li>{e(i)}</li>" for i in s["ul"]) + "</ul>")
+    faq = "".join(f"<details class=\"faq\"><summary>{e(f['q'])}</summary><p>{e(f['a'])}</p></details>" for f in pg["faq"])
+    latest = "".join(card(p) for p in POSTS[:3])
+    ld = [dict(BUSINESS, url=BASE + "/"),
+          {"@context": "https://schema.org", "@type": "FAQPage",
+           "mainEntity": [{"@type": "Question", "name": f["q"], "acceptedAnswer": {"@type": "Answer", "text": f["a"]}} for f in pg["faq"]]}]
+    body = f"""<main>
+  <section class="hero" style="padding:0">
+    <div class="hero-bars" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="wrap">
+      <div class="eyebrow">{e(pg['eyebrow'])}</div>
+      <h1 style="max-width:16ch">{e(pg['headline'])}</h1>
+      <p class="lede">{e(pg['lede'])}</p>
+      <div class="ctas">{ext(book('page-' + pg['slug']), 'Book Your Free Intro')}<a class="btn ghost" href="sms:{e(S['phone_e164'])}">Text Us</a></div>
+    </div>
+  </section>
+  <article class="post" style="padding-top:56px">
+    <h1 style="font-size:clamp(28px,4vw,40px)">{e(pg['title'])}</h1>
+    {''.join(parts)}
+    <h2>Frequently asked questions</h2>
+    {faq}
+    <div class="post-cta"><b>Start with a free intro session</b>{ext(book('page-' + pg['slug'] + '-bottom'), 'Book Your Free Intro')}</div>
+  </article>
+  <section class="who" style="padding:64px 0"><div class="wrap">
+    <div class="sec-head"><div class="kicker">From the blog</div><h2>Tips from our coaches.</h2></div>
+    <div class="posts">{latest}</div>
+  </div></section>
+</main>"""
+    return page(f"{pg['title']} | {S['name']}", pg["meta"], f"/{pg['slug']}/", body, ld)
 
 
 def write(rel, text):
@@ -205,14 +250,25 @@ def main():
     write("index.html", home())
     write("blog/index.html", blog_index())
     for p in POSTS: write(f"blog/{p['slug']}/index.html", post_page(p))
+    for pg in PAGES:
+        d = os.path.join(ROOT, pg["slug"])
+        if os.path.isdir(d): shutil.rmtree(d)
+        write(f"{pg['slug']}/index.html", landing(pg))
     write("404.html", page(f"Page not found | {S['name']}", S["description"], "/404.html",
           '<main><article class="post"><h1>Page not found.</h1><p>That page doesn\'t exist. <a href="/">Go home</a> or <a href="/blog/">read the blog</a>.</p></article></main>'))
     today = datetime.date.today().isoformat()
-    urls = [("/", today), ("/blog/", POSTS[0]["date"] if POSTS else today)] + [(f"/blog/{p['slug']}/", p["date"]) for p in POSTS]
+    urls = [("/", today), ("/blog/", POSTS[0]["date"] if POSTS else today)] + [(f"/{pg['slug']}/", today) for pg in PAGES] + [(f"/blog/{p['slug']}/", p["date"]) for p in POSTS]
     write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
           "".join(f"  <url><loc>{BASE}{u}</loc><lastmod>{d}</lastmod></url>\n" for u, d in urls) + "</urlset>\n")
     write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n")
-    write("book/index.html", '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Book Your Intro | ' + e(S["name"]) + '</title><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0; url=' + e(S["booking_url"]) + '"></head><body><a href="' + e(S["booking_url"]) + '">Book your intro session</a></body></html>')
+    fwd = S["booking_url"]
+    book_html = ('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Book Your Intro | ' + e(S["name"]) + '</title><meta name="robots" content="noindex">'
+                 '<script>var u=' + json.dumps(fwd) + ';var q=location.search.slice(1);'
+                 'if(!/utm_source=/.test(q)){q=(q?q+"&":"")+"utm_source=direct&utm_medium=short-link&utm_campaign=book"}'
+                 'location.replace(u+(u.indexOf("?")<0?"?":"&")+q);</script>'
+                 '<noscript><meta http-equiv="refresh" content="0; url=' + e(fwd) + '"></noscript></head>'
+                 '<body><a href="' + e(fwd) + '">Book your intro session</a></body></html>')
+    write("book/index.html", book_html)
     write(".nojekyll", "")
     cname = os.path.join(ROOT, "CNAME")
     if S.get("custom_domain"): write("CNAME", S["custom_domain"] + "\n")
