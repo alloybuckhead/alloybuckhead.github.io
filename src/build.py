@@ -115,12 +115,12 @@ def home():
     <div class="wrap">
       <div class="eyebrow">Members-only small-group training · Buckhead, Atlanta</div>
       <h1>Strength for <span>every</span> decade.</h1>
-      <p class="lede">45-minute, coach-led personal training sessions in Buckhead built around you — whether you're 25 or 75, brand new or getting back to it. Small groups. Real coaching. Results that last.</p>
+      <p class="lede">Coach-led personal training sessions in Buckhead, about 50 minutes each and built around you — whether you're 25 or 75, brand new or getting back to it. Small groups. Real coaching. Results that last.</p>
       <div class="ctas">{ext(book('home-hero'), 'Book Your Intro Session')}<a class="btn ghost" href="/blog/">Read the Blog</a></div>
     </div>
   </section>
   <div class="stats"><div class="wrap">
-    <div class="stat"><b>45</b><span>Minute sessions</span></div>
+    <div class="stat"><b>~50</b><span>Minute sessions</span></div>
     <div class="stat"><b>150</b><span>Member cap</span></div>
     <div class="stat"><b>30+</b><span>Years of Alloy</span></div>
     <div class="stat"><b>100%</b><span>Coach-led</span></div>
@@ -138,7 +138,7 @@ def home():
   <section class="who"><div class="wrap">
     <div class="sec-head"><div class="kicker">Who we train</div><h2>Built for real schedules and real lives.</h2></div>
     <div class="grid3">
-      <div class="card"><h3>Busy professionals</h3><p>Efficient 45-minute sessions that fit before work, at lunch, or after the day is done.</p></div>
+      <div class="card"><h3>Busy professionals</h3><p>Efficient 50-minute sessions that fit before work, at lunch, or after the day is done.</p></div>
       <div class="card"><h3>Moms</h3><p>Rebuild strength and energy with coaching that respects where you are right now.</p></div>
       <div class="card"><h3>Active agers</h3><p>Strength, balance and mobility training to keep you doing what you love for decades.</p></div>
     </div>
