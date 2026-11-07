@@ -265,9 +265,9 @@ def guide_page():
       <div class="kicker">What's inside</div>
       <h2 class="display" style="font:900 clamp(28px,3.5vw,40px) Archivo;text-transform:uppercase;margin:12px 0 16px">Strength for every decade.</h2>
       <ul class="guide-list">
-        <li>Why strength is the foundation of healthy aging</li>
-        <li>How to start safely, whatever your age or fitness level</li>
-        <li>Simple habits that build strength, balance and confidence</li>
+        <li>The 5 everyday movements that keep you independent</li>
+        <li>A simple 4-week starter routine you can do at home</li>
+        <li>Easy ways to track your progress</li>
       </ul>
       <p style="color:var(--muted);margin-top:20px">From the coaches at {e(S['name'])}, {e(S['street'])}, {e(S['city'])}, {e(S['region'])}.</p>
     </div>
