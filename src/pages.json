@@ -1,5 +1,69 @@
 [
   {
+    "slug": "free-first-workout-inbody-scan-buckhead",
+    "nav": "Free Workout + InBody",
+    "title": "Free First Workout + InBody Scan in Buckhead",
+    "meta": "Book a free first workout at Alloy Personal Training Buckhead, including an InBody body composition scan. Coach-led, about 50 minutes, customized to you. 3330 Piedmont Road, Suite 24, Atlanta.",
+    "eyebrow": "Free first workout · InBody scan included · Buckhead, Atlanta",
+    "headline": "Your first workout is free. Your InBody scan is included.",
+    "lede": "Train with a certified coach, see what's under the scale number with an InBody body composition scan, and leave with a clear starting point. Free, by appointment.",
+    "sections": [
+      {
+        "h": "What's included",
+        "ul": [
+          "A coach-led first workout, about 50 minutes, adjusted to your fitness level",
+          "An InBody body composition scan",
+          "A conversation about your goals, history and any limitations",
+          "A tour of the studio and how membership works"
+        ]
+      },
+      {
+        "h": "Why an InBody scan beats the bathroom scale",
+        "p": [
+          "A regular scale gives you one number. An InBody scan breaks your weight down into measures like muscle, body fat and body water, so you can see what's actually changing.",
+          "That matters most when you're building strength, losing weight or on a GLP-1 medication: the goal is to keep and build muscle while losing fat, and the scale alone can't tell you which is happening."
+        ]
+      },
+      {
+        "h": "By appointment only",
+        "p": [
+          "InBody scans are part of your free first workout, not a walk-in service. Book a time below and we'll have a coach ready for you."
+        ]
+      },
+      {
+        "h": "How to prepare",
+        "ul": [
+          "Wear comfortable workout clothes and sneakers",
+          "Bring water",
+          "For the most consistent scan, avoid a large meal or a hard workout in the few hours beforehand",
+          "Let us know if you have a pacemaker or other implanted electronic device, or are pregnant, and we'll skip the scan"
+        ]
+      }
+    ],
+    "faq": [
+      {
+        "q": "Is the first workout really free?",
+        "a": "Yes. Your first coach-led workout and InBody scan are free."
+      },
+      {
+        "q": "Can I walk in just for an InBody scan?",
+        "a": "No. InBody scans are included with a booked free first workout and aren't offered to walk-ins."
+      },
+      {
+        "q": "Do I need to be in shape?",
+        "a": "No. Your coach adjusts every exercise to your current fitness level."
+      },
+      {
+        "q": "How long does it take?",
+        "a": "The workout itself is about 50 minutes, plus a few minutes for your scan and goal conversation."
+      },
+      {
+        "q": "Where are you located?",
+        "a": "3330 Piedmont Road, Suite 24, Atlanta, GA 30305, in Buckhead."
+      }
+    ]
+  },
+  {
     "slug": "personal-training-women-over-50-buckhead",
     "nav": "Women Over 50",
     "title": "Personal Training for Women Over 50 in Buckhead",
@@ -8,15 +72,47 @@
     "headline": "Get stronger in your 50s, 60s and beyond.",
     "lede": "Coach-led strength training built for women who want to feel strong, steady and capable for decades — not just look good for a season.",
     "sections": [
-      {"h": "Why strength training matters more after 50", "p": ["Muscle and bone don't take care of themselves as we age. Without training, strength gradually slips away, and everyday things like carrying groceries, climbing stairs or getting up off the floor start to feel harder.", "The good news: your body still responds to strength training at every age. With the right coaching, women in their 50s, 60s and 70s build real, noticeable strength."]},
-      {"h": "What training looks like at Alloy Personal Training Buckhead", "ul": ["50-minute sessions led by a certified coach", "Small groups, so your coach knows your name, goals and limits", "Every exercise adjusted to your fitness level and history", "Focus on strength, balance and mobility you'll feel in daily life", "Members-only studio capped at 150 members"]},
-      {"h": "Never lifted before? Perfect.", "p": ["Many of our members started with zero lifting experience. Your coach starts where you are, teaches you good form, and progresses you safely week by week. No intimidation, no guesswork."]}
+      {
+        "h": "Why strength training matters more after 50",
+        "p": [
+          "Muscle and bone don't take care of themselves as we age. Without training, strength gradually slips away, and everyday things like carrying groceries, climbing stairs or getting up off the floor start to feel harder.",
+          "The good news: your body still responds to strength training at every age. With the right coaching, women in their 50s, 60s and 70s build real, noticeable strength."
+        ]
+      },
+      {
+        "h": "What training looks like at Alloy Personal Training Buckhead",
+        "ul": [
+          "50-minute sessions led by a certified coach",
+          "Small groups, so your coach knows your name, goals and limits",
+          "Every exercise adjusted to your fitness level and history",
+          "Focus on strength, balance and mobility you'll feel in daily life",
+          "Members-only studio capped at 150 members"
+        ]
+      },
+      {
+        "h": "Never lifted before? Perfect.",
+        "p": [
+          "Many of our members started with zero lifting experience. Your coach starts where you are, teaches you good form, and progresses you safely week by week. No intimidation, no guesswork."
+        ]
+      }
     ],
     "faq": [
-      {"q": "Is it too late to start strength training after 50?", "a": "No. Muscles respond to training at every age. The key is starting at the right level and progressing gradually with good coaching."},
-      {"q": "Do I need any experience?", "a": "No. Your coach adjusts every exercise to your current fitness level and teaches you proper form from day one."},
-      {"q": "How long are sessions?", "a": "Each coach-led session runs about 50 minutes, so you're in and out in under an hour."},
-      {"q": "Where are you located?", "a": "3330 Piedmont Road, Suite 24, Atlanta, GA 30305, in Buckhead."}
+      {
+        "q": "Is it too late to start strength training after 50?",
+        "a": "No. Muscles respond to training at every age. The key is starting at the right level and progressing gradually with good coaching."
+      },
+      {
+        "q": "Do I need any experience?",
+        "a": "No. Your coach adjusts every exercise to your current fitness level and teaches you proper form from day one."
+      },
+      {
+        "q": "How long are sessions?",
+        "a": "Each coach-led session runs about 50 minutes, so you're in and out in under an hour."
+      },
+      {
+        "q": "Where are you located?",
+        "a": "3330 Piedmont Road, Suite 24, Atlanta, GA 30305, in Buckhead."
+      }
     ]
   },
   {
@@ -28,15 +124,50 @@
     "headline": "Stay strong, steady and independent.",
     "lede": "Coach-led strength, balance and mobility training for active adults in their 60s, 70s and beyond — right here in Buckhead.",
     "sections": [
-      {"h": "Train for the life you want to keep living", "p": ["Strength is what lets you get up from a low chair, carry your grandkids, travel comfortably and catch yourself if you trip. Training for it is one of the best investments you can make in staying independent.", "Our coaches focus on the movements you use every day — standing up, bending, lifting, carrying and stepping — so the strength you build shows up in real life."]},
-      {"h": "Built around safety and your history", "ul": ["Certified coaches who adjust every exercise to your body", "Small groups for real, hands-on attention", "Balance and stability work to help you feel steady on your feet", "50-minute sessions that fit easily into your week", "A welcoming, members-only studio — no big-box gym crowds"]},
-      {"h": "A good fit if you…", "ul": ["Want to stay active and independent as you age", "Feel unsteady or less strong than you used to", "Are new to exercise or returning after a long break", "Prefer coaching over figuring it out alone"]}
+      {
+        "h": "Train for the life you want to keep living",
+        "p": [
+          "Strength is what lets you get up from a low chair, carry your grandkids, travel comfortably and catch yourself if you trip. Training for it is one of the best investments you can make in staying independent.",
+          "Our coaches focus on the movements you use every day — standing up, bending, lifting, carrying and stepping — so the strength you build shows up in real life."
+        ]
+      },
+      {
+        "h": "Built around safety and your history",
+        "ul": [
+          "Certified coaches who adjust every exercise to your body",
+          "Small groups for real, hands-on attention",
+          "Balance and stability work to help you feel steady on your feet",
+          "50-minute sessions that fit easily into your week",
+          "A welcoming, members-only studio — no big-box gym crowds"
+        ]
+      },
+      {
+        "h": "A good fit if you…",
+        "ul": [
+          "Want to stay active and independent as you age",
+          "Feel unsteady or less strong than you used to",
+          "Are new to exercise or returning after a long break",
+          "Prefer coaching over figuring it out alone"
+        ]
+      }
     ],
     "faq": [
-      {"q": "Is strength training safe for older adults?", "a": "With proper coaching and the right starting level, strength training is a great fit for most older adults. Talk with your doctor before starting any new exercise program, especially if you have a medical condition."},
-      {"q": "What if I have an old injury or limitation?", "a": "Tell your coach at your intro session. Exercises are adjusted to your history so you can train around limitations."},
-      {"q": "How often should I train?", "a": "Two to three sessions a week is a great target for most people."},
-      {"q": "Where are you located?", "a": "3330 Piedmont Road, Suite 24, Atlanta, GA 30305, in Buckhead."}
+      {
+        "q": "Is strength training safe for older adults?",
+        "a": "With proper coaching and the right starting level, strength training is a great fit for most older adults. Talk with your doctor before starting any new exercise program, especially if you have a medical condition."
+      },
+      {
+        "q": "What if I have an old injury or limitation?",
+        "a": "Tell your coach at your free first workout. Exercises are adjusted to your history so you can train around limitations."
+      },
+      {
+        "q": "How often should I train?",
+        "a": "Two to three sessions a week is a great target for most people."
+      },
+      {
+        "q": "Where are you located?",
+        "a": "3330 Piedmont Road, Suite 24, Atlanta, GA 30305, in Buckhead."
+      }
     ]
   },
   {
@@ -48,15 +179,46 @@
     "headline": "Personal training, without the personal-training price.",
     "lede": "Get the attention of a personal trainer and the energy of a small group in focused 50-minute sessions — built for busy professionals, moms and active agers.",
     "sections": [
-      {"h": "How small-group personal training works", "p": ["Instead of a big class following one workout, you train in a small group led by a certified coach. Everyone works on a program adjusted to their own level, and your coach corrects form, adjusts weights and keeps you progressing."]},
-      {"h": "Why members choose it", "ul": ["Real coaching every session, not a crowded class", "Customized to your fitness level, goals and history", "About 50 minutes — in and out before work, at lunch or after", "Accountability from coaches who notice when you're not there", "Members-only and capped at 150, so the studio stays personal"]},
-      {"h": "Small group vs. big-box gym vs. one-on-one", "p": ["A big-box gym gives you equipment but no guidance. One-on-one training gives you guidance at a premium price. Small-group personal training at Alloy Personal Training Buckhead sits in between: personal coaching, a motivating group, and a schedule that fits real life."]}
+      {
+        "h": "How small-group personal training works",
+        "p": [
+          "Instead of a big class following one workout, you train in a small group led by a certified coach. Everyone works on a program adjusted to their own level, and your coach corrects form, adjusts weights and keeps you progressing."
+        ]
+      },
+      {
+        "h": "Why members choose it",
+        "ul": [
+          "Real coaching every session, not a crowded class",
+          "Customized to your fitness level, goals and history",
+          "About 50 minutes — in and out before work, at lunch or after",
+          "Accountability from coaches who notice when you're not there",
+          "Members-only and capped at 150, so the studio stays personal"
+        ]
+      },
+      {
+        "h": "Small group vs. big-box gym vs. one-on-one",
+        "p": [
+          "A big-box gym gives you equipment but no guidance. One-on-one training gives you guidance at a premium price. Small-group personal training at Alloy Personal Training Buckhead sits in between: personal coaching, a motivating group, and a schedule that fits real life."
+        ]
+      }
     ],
     "faq": [
-      {"q": "How many people are in a session?", "a": "Sessions are kept small so every member gets hands-on coaching. Ask us about current session sizes at your intro."},
-      {"q": "Do I need to be in shape to start?", "a": "No. Every workout is adjusted to your current fitness level."},
-      {"q": "How do I get started?", "a": "Book a free intro session. You'll meet a coach, tour the studio and talk through your goals."},
-      {"q": "Where are you located?", "a": "3330 Piedmont Road, Suite 24, Atlanta, GA 30305, in Buckhead."}
+      {
+        "q": "How many people are in a session?",
+        "a": "Sessions are kept small so every member gets hands-on coaching. Ask us about current session sizes at your intro."
+      },
+      {
+        "q": "Do I need to be in shape to start?",
+        "a": "No. Every workout is adjusted to your current fitness level."
+      },
+      {
+        "q": "How do I get started?",
+        "a": "Book your free first workout. You'll train with a coach, get an InBody scan and talk through your goals."
+      },
+      {
+        "q": "Where are you located?",
+        "a": "3330 Piedmont Road, Suite 24, Atlanta, GA 30305, in Buckhead."
+      }
     ]
   }
 ]

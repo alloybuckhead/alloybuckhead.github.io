@@ -47,16 +47,17 @@ def guide_cta(campaign, cls="post-cta guide-cta"):
             f'<a class="btn" href="{guide(campaign)}">Get the Free Guide</a></div>')
 
 
-def booking_embed(campaign, heading="Book your free intro session"):
+def booking_embed(campaign, heading="Book your free first workout + InBody scan"):
     """The GoHighLevel booking calendar right on the page, so visitors can book wherever they are."""
     return (f'<div class="book-embed"><h2>{e(heading)}</h2><p>Pick a time below. Prefer to talk first? '
             f'Call or text <a href="tel:{e(S["phone_e164"])}">{e(S["phone"])}</a>.</p>'
             f'<iframe src="{e(book(campaign))}" loading="lazy" style="width:100%;min-height:760px;border:none;overflow:hidden" '
-            f'scrolling="no" id="booking-{e(campaign)}" title="Book a free intro session"></iframe>'
+            f'scrolling="no" id="booking-{e(campaign)}" title="Book your free first workout"></iframe>'
             f'<script src="{S["form_host"]}/js/form_embed.js" defer></script></div>')
 
 
 RELATED = [
+    (("glp", "body composition", "inbody", "protein", "weight loss", "fat"), "free-first-workout-inbody-scan-buckhead"),
     (("women", "menopause", "moms", "mother"), "personal-training-women-over-50-buckhead"),
     (("senior", "older", "50", "60", "70", "longevity", "aging", "balance", "fall", "bone"), "strength-training-for-seniors-atlanta"),
 ]
@@ -114,7 +115,7 @@ def page(title, desc, path, body, jsonld=None, og_type="website"):
 <div class="topbar"><div class="wrap"><span>{e(S['street'])} · Buckhead, Atlanta, GA</span><a href="tel:{e(S['phone_e164'])}">{e(S['phone'])}</a></div></div>
 <header class="nav"><div class="wrap">
   <a class="brand" href="/"><span class="brand-mark">A</span><span class="brand-name">Alloy Personal Training<small>Buckhead</small></span></a>
-  <nav class="links"><a href="/">Home</a><a href="/blog/">Blog</a><a href="/guide/">Free Guide</a><a href="/#visit">Visit</a>{ext(book('nav'), 'Book an Intro', 'btn sm')}</nav>
+  <nav class="links"><a href="/">Home</a><a href="/blog/">Blog</a><a href="/free-first-workout-inbody-scan-buckhead/">Free Workout + InBody</a><a href="/guide/">Free Guide</a><a href="/#visit">Visit</a>{ext(book('nav'), 'Free Workout', 'btn sm')}</nav>
 </div></header>
 {body}
 <footer><div class="wrap">
@@ -122,7 +123,7 @@ def page(title, desc, path, body, jsonld=None, og_type="website"):
   <div class="foot-links"><b>Training in Buckhead</b>{''.join(f'<a href="/{e(x["slug"])}/">{e(x["title"])}</a>' for x in PAGES)}</div>
   <div class="disc">Blog content is for general education and isn't medical advice. Talk with your doctor before starting a new exercise or nutrition program.</div>
 </div></footer>
-<div class="sticky-cta">{ext(book('sticky-mobile'), 'Book Free Intro')}<a class="btn ghost" href="sms:{e(S['phone_e164'])}">Text Us</a><a class="btn ghost" href="tel:{e(S['phone_e164'])}">Call</a></div>
+<div class="sticky-cta">{ext(book('sticky-mobile'), 'Free Workout')}<a class="btn ghost" href="sms:{e(S['phone_e164'])}">Text Us</a><a class="btn ghost" href="tel:{e(S['phone_e164'])}">Call</a></div>
 </body>
 </html>
 """
@@ -152,7 +153,7 @@ def home():
       <div class="eyebrow">Members-only small-group training · Buckhead, Atlanta</div>
       <h1>Strength for <span>every</span> decade.</h1>
       <p class="lede">Coach-led personal training sessions in Buckhead, about 50 minutes each and built around you — whether you're 25 or 75, brand new or getting back to it. Small groups. Real coaching. Results that last.</p>
-      <div class="ctas">{ext(book('home-hero'), 'Book Your Intro Session')}<a class="btn ghost" href="/blog/">Read the Blog</a></div>
+      <div class="ctas">{ext(book('home-hero'), 'Book Your Free First Workout')}<a class="btn ghost" href="/blog/">Read the Blog</a></div>
     </div>
   </section>
   <div class="stats"><div class="wrap">
@@ -183,7 +184,7 @@ def home():
     <div class="sec-head"><div class="kicker">How it works</div><h2>Getting started is simple.</h2>
       <p>No intimidation, no guesswork. Here's what your first steps look like.</p></div>
     <div class="grid3">
-      <div class="card"><span class="num">STEP 1</span><h3>Book an intro</h3><p>Meet a coach, tour the studio and talk through your goals.</p></div>
+      <div class="card"><span class="num">STEP 1</span><h3>Free first workout</h3><p>Train with a coach, get an <a href="/free-first-workout-inbody-scan-buckhead/">InBody scan</a> and talk through your goals.</p></div>
       <div class="card"><span class="num">STEP 2</span><h3>Get your plan</h3><p>We assess where you're starting and map out the right membership for you.</p></div>
       <div class="card"><span class="num">STEP 3</span><h3>Train &amp; progress</h3><p>Show up, get coached, and watch your strength build week over week.</p></div>
     </div>
@@ -267,7 +268,7 @@ def landing(pg):
       <div class="eyebrow">{e(pg['eyebrow'])}</div>
       <h1 style="max-width:16ch">{e(pg['headline'])}</h1>
       <p class="lede">{e(pg['lede'])}</p>
-      <div class="ctas">{ext(book('page-' + pg['slug']), 'Book Your Free Intro')}<a class="btn ghost" href="sms:{e(S['phone_e164'])}">Text Us</a></div>
+      <div class="ctas">{ext(book('page-' + pg['slug']), 'Book Your Free First Workout')}<a class="btn ghost" href="sms:{e(S['phone_e164'])}">Text Us</a></div>
     </div>
   </section>
   <article class="post" style="padding-top:56px">
@@ -410,17 +411,18 @@ def main():
           "".join(f"  <url><loc>{BASE}{u}</loc><lastmod>{d}</lastmod></url>\n" for u, d in urls) + "</urlset>\n")
     write("robots.txt", "".join(f"User-agent: {a}\nAllow: /\n\n" for a in ["GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "Claude-SearchBot", "PerplexityBot", "Google-Extended", "Bingbot", "*"]) + f"Sitemap: {BASE}/sitemap.xml\n")
     fwd = S["booking_url"]
-    book_html = ('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Book Your Intro | ' + e(S["name"]) + '</title><meta name="robots" content="noindex">'
+    book_html = ('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Book Your Free First Workout | ' + e(S["name"]) + '</title><meta name="robots" content="noindex">'
                  '<script>var u=' + json.dumps(fwd) + ';var q=location.search.slice(1);'
                  'if(!/utm_source=/.test(q)){q=(q?q+"&":"")+"utm_source=direct&utm_medium=short-link&utm_campaign=book"}'
                  'location.replace(u+(u.indexOf("?")<0?"?":"&")+q);</script>'
                  '<noscript><meta http-equiv="refresh" content="0; url=' + e(fwd) + '"></noscript></head>'
-                 '<body><a href="' + e(fwd) + '">Book your intro session</a></body></html>')
+                 '<body><a href="' + e(fwd) + '">Book your free first workout</a></body></html>')
     write("book/index.html", book_html)
     llms = [f"# {S['name']}", "", f"> {S['description']}", "",
             f"- Address: {S['street']}, {S['city']}, {S['region']} {S['postal']} (Buckhead, Atlanta)",
             f"- Phone / text: {S['phone']}",
-            f"- Book a free intro session: {BASE}/book",
+            f"- Free first workout with an InBody body composition scan (by appointment; scans are not offered to walk-ins): {BASE}/free-first-workout-inbody-scan-buckhead/",
+            f"- Book: {BASE}/book",
             "- Sessions: about 50 minutes, coach-led, small groups, customized to each member's fitness level",
             "- Members-only studio, capped at 150 members", "- Serves busy professionals, moms and active adults of all ages, especially 35-80", "",
             "## Key pages", f"- [Home]({BASE}/)"] + [f"- [{x['title']}]({BASE}/{x['slug']}/): {x['meta']}" for x in PAGES] + [
