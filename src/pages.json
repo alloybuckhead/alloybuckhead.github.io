@@ -1,33 +1,41 @@
 [
   {
-    "slug": "free-first-workout-inbody-scan-buckhead",
-    "nav": "Free Workout + InBody",
-    "title": "Free First Workout + InBody Scan in Buckhead",
-    "meta": "Book a free first workout at Alloy Personal Training Buckhead, including an InBody body composition scan. Coach-led, about 50 minutes, customized to you. 3330 Piedmont Road, Suite 24, Atlanta.",
-    "eyebrow": "Free first workout · InBody scan included · Buckhead, Atlanta",
-    "headline": "Your first workout is free. Your InBody scan is included.",
-    "lede": "Train with a certified coach, see what's under the scale number with an InBody body composition scan, and leave with a clear starting point. Free, by appointment.",
+    "slug": "free-first-session-inbody-scan-buckhead",
+    "nav": "Free Session + InBody",
+    "title": "Free First Session + InBody Scan in Buckhead",
+    "meta": "Book a complimentary first session at Alloy Personal Training Buckhead: goal setting, health and injury history, an InBody body composition scan with protein goals, a functional movement screen and a short sample workout.",
+    "eyebrow": "Complimentary first session · InBody scan included · Buckhead, Atlanta",
+    "headline": "Your first session is on us.",
+    "lede": "Sit down with a certified coach, get an InBody body composition scan, and try a short sample workout. You'll leave knowing exactly where you're starting and what to focus on. Completely complimentary, by appointment.",
     "sections": [
       {
-        "h": "What's included",
+        "h": "What happens in your first session",
         "ul": [
-          "A coach-led first workout, about 50 minutes, adjusted to your fitness level",
-          "An InBody body composition scan",
-          "A conversation about your goals, history and any limitations",
-          "A tour of the studio and how membership works"
+          "Goal setting: what you want to feel, do and change",
+          "Health and injury history, so your coach knows what to work around",
+          "A short conversation about your eating habits",
+          "An InBody body composition scan, including your protein goals",
+          "A functional movement screen to see how you move, squat, reach and balance",
+          "A short sample workout so you can experience coach-led training"
         ]
       },
       {
         "h": "Why an InBody scan beats the bathroom scale",
         "p": [
-          "A regular scale gives you one number. An InBody scan breaks your weight down into measures like muscle, body fat and body water, so you can see what's actually changing.",
+          "A regular scale gives you one number. An InBody scan breaks your weight down into measures like muscle, body fat and body water, so you can see what's actually changing. It also gives you protein goals to support the muscle you're building.",
           "That matters most when you're building strength, losing weight or on a GLP-1 medication: the goal is to keep and build muscle while losing fat, and the scale alone can't tell you which is happening."
+        ]
+      },
+      {
+        "h": "What the movement screen tells us",
+        "p": [
+          "The functional movement screen shows your coach how your body moves today: where you're strong, where you're tight, and where balance or mobility needs work. It's how we customize your training safely from day one."
         ]
       },
       {
         "h": "By appointment only",
         "p": [
-          "InBody scans are part of your free first workout, not a walk-in service. Book a time below and we'll have a coach ready for you."
+          "InBody scans are part of your complimentary first session, not a walk-in service. Book a time below and a coach will be ready for you."
         ]
       },
       {
@@ -42,20 +50,20 @@
     ],
     "faq": [
       {
-        "q": "Is the first workout really free?",
-        "a": "Yes. Your first coach-led workout and InBody scan are free."
+        "q": "Is the first session really free?",
+        "a": "Yes. Your first session, including the InBody scan, is completely complimentary."
+      },
+      {
+        "q": "Is it a full workout?",
+        "a": "No. It's mostly about getting to know you: goals, health history, your InBody scan and a movement screen, followed by a short sample workout."
       },
       {
         "q": "Can I walk in just for an InBody scan?",
-        "a": "No. InBody scans are included with a booked free first workout and aren't offered to walk-ins."
+        "a": "No. InBody scans are included with a booked first session and aren't offered to walk-ins."
       },
       {
         "q": "Do I need to be in shape?",
-        "a": "No. Your coach adjusts every exercise to your current fitness level."
-      },
-      {
-        "q": "How long does it take?",
-        "a": "The workout itself is about 50 minutes, plus a few minutes for your scan and goal conversation."
+        "a": "No. The movement screen and sample workout are adjusted to your current fitness level."
       },
       {
         "q": "Where are you located?",
@@ -158,7 +166,7 @@
       },
       {
         "q": "What if I have an old injury or limitation?",
-        "a": "Tell your coach at your free first workout. Exercises are adjusted to your history so you can train around limitations."
+        "a": "Tell your coach at your free first session. Exercises are adjusted to your history so you can train around limitations."
       },
       {
         "q": "How often should I train?",
@@ -213,7 +221,7 @@
       },
       {
         "q": "How do I get started?",
-        "a": "Book your free first workout. You'll train with a coach, get an InBody scan and talk through your goals."
+        "a": "Book your complimentary first session. You'll set goals with a coach, get an InBody scan and a movement screen, and try a short sample workout."
       },
       {
         "q": "Where are you located?",
