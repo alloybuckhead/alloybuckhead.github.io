@@ -145,3 +145,16 @@ details.faq p{margin:10px 0 0;font-size:17px;color:var(--muted)}
 .guide-list{padding-left:20px;font-size:17px;line-height:1.7}
 .guide-form{background:#fff;border:1px solid #e5e5e5;border-radius:10px;padding:8px}
 @media(max-width:820px){.guide-grid{grid-template-columns:1fr;gap:32px}}
+
+/* address + phone strip above the header */
+.topbar{background:var(--yellow);color:var(--char);font:600 13px Inter}
+.topbar .wrap{display:flex;justify-content:space-between;gap:12px;padding-top:7px;padding-bottom:7px}
+.topbar a{font-weight:800;text-decoration:none;white-space:nowrap}
+@media (max-width:760px){.topbar{font-size:12px}.topbar .wrap{padding-left:14px;padding-right:14px}}
+
+/* booking calendar embedded on the page */
+.book-embed{margin-top:48px;border-top:6px solid var(--yellow);padding-top:28px}
+.book-embed h2{margin-top:0}
+.book-embed p{color:var(--muted)}
+.related{font-size:16px;color:var(--muted);margin-top:28px}
+.related a{color:var(--char);font-weight:700}

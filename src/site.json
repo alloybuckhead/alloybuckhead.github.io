@@ -5,7 +5,7 @@
   "phone": "762-245-4442",
   "phone_e164": "+17622454442",
   "booking_url": "https://alloy.training/widget/booking/XWjCKfw6MFx37XLgvgm6",
-  "street": "3330 Piedmont Rd NE, Suite 24",
+  "street": "3330 Piedmont Road, Suite 24",
   "city": "Atlanta",
   "region": "GA",
   "postal": "30305",
@@ -13,5 +13,6 @@
   "description": "Members-only small-group personal training in Buckhead, Atlanta. 50-minute coach-led sessions customized for every fitness level \u2014 strength for every decade.",
   "guide_form_id": "Qqe8nSG4rDB4MmGZbAR0",
   "form_host": "https://alloy.training",
-  "bundle_form_id": ""
+  "bundle_form_id": "",
+  "ga4_id": ""
 }

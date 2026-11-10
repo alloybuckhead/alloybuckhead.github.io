@@ -47,6 +47,40 @@ def guide_cta(campaign, cls="post-cta guide-cta"):
             f'<a class="btn" href="{guide(campaign)}">Get the Free Guide</a></div>')
 
 
+def booking_embed(campaign, heading="Book your free intro session"):
+    """The GoHighLevel booking calendar right on the page, so visitors can book wherever they are."""
+    return (f'<div class="book-embed"><h2>{e(heading)}</h2><p>Pick a time below. Prefer to talk first? '
+            f'Call or text <a href="tel:{e(S["phone_e164"])}">{e(S["phone"])}</a>.</p>'
+            f'<iframe src="{e(book(campaign))}" loading="lazy" style="width:100%;min-height:760px;border:none;overflow:hidden" '
+            f'scrolling="no" id="booking-{e(campaign)}" title="Book a free intro session"></iframe>'
+            f'<script src="{S["form_host"]}/js/form_embed.js" defer></script></div>')
+
+
+RELATED = [
+    (("women", "menopause", "moms", "mother"), "personal-training-women-over-50-buckhead"),
+    (("senior", "older", "50", "60", "70", "longevity", "aging", "balance", "fall", "bone"), "strength-training-for-seniors-atlanta"),
+]
+
+
+def related_page(p):
+    text = (p["title"] + " " + p.get("dek", "") + " " + p["category"]).lower()
+    slug = next((s for keys, s in RELATED if any(k in text for k in keys)), "small-group-personal-training-buckhead")
+    return next(x for x in PAGES if x["slug"] == slug)
+
+
+def ga4():
+    gid = S.get("ga4_id")
+    if not gid:
+        return ""
+    return (f'<script async src="https://www.googletagmanager.com/gtag/js?id={e(gid)}"></script>'
+            f'<script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments)}}gtag("js",new Date());gtag("config","{e(gid)}");'
+            'document.addEventListener("click",function(ev){var a=ev.target.closest&&ev.target.closest("a");if(!a)return;var h=a.getAttribute("href")||"";'
+            'if(h.indexOf("/widget/booking/")>-1||h.indexOf("/book")===0)gtag("event","booking_click",{link_url:h});'
+            'else if(h.indexOf("tel:")===0)gtag("event","phone_click");else if(h.indexOf("sms:")===0)gtag("event","text_click");});'
+            'window.addEventListener("message",function(m){try{var d=typeof m.data==="string"?m.data:JSON.stringify(m.data);'
+            'if(/form-submit|formSubmit|appointment|booking/i.test(d))gtag("event","generate_lead",{method:"ghl_embed"});}catch(_){}});</script>')
+
+
 def ext(url, label, cls="btn"):
     return f'<a class="{cls}" href="{e(url)}" target="_blank" rel="noopener">{label}</a>'
 
@@ -74,8 +108,10 @@ def page(title, desc, path, body, jsonld=None, og_type="website"):
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css">
 {ld}
+{ga4()}
 </head>
 <body>
+<div class="topbar"><div class="wrap"><span>{e(S['street'])} · Buckhead, Atlanta, GA</span><a href="tel:{e(S['phone_e164'])}">{e(S['phone'])}</a></div></div>
 <header class="nav"><div class="wrap">
   <a class="brand" href="/"><span class="brand-mark">A</span><span class="brand-name">Alloy Personal Training<small>Buckhead</small></span></a>
   <nav class="links"><a href="/">Home</a><a href="/blog/">Blog</a><a href="/guide/">Free Guide</a><a href="/#visit">Visit</a>{ext(book('nav'), 'Book an Intro', 'btn sm')}</nav>
@@ -207,7 +243,8 @@ def post_page(p):
   <h1>{e(p['title'])}</h1><p class="dek">{e(p.get('dek',''))}</p>
   {''.join(parts)}
   {(bundle_cta('blog-' + p['slug']) if p.get('bundle') and bundle_on() else guide_cta('blog-' + p['slug']))}
-  <div class="post-cta"><b>Ready to train with a coach?</b>{ext(book('blog-' + p['slug']), 'Book Your Intro')}</div>
+  <p class="related">Related: <a href="/{e(related_page(p)['slug'])}/">{e(related_page(p)['title'])}</a></p>
+  {booking_embed('blog-' + p['slug'])}
 </article></main>"""
     return page(f"{p['title']} | {S['name']}", excerpt(p), f"/blog/{p['slug']}/", body, ld, "article")
 
@@ -239,7 +276,7 @@ def landing(pg):
     {guide_cta('page-' + pg['slug'])}
     <h2>Frequently asked questions</h2>
     {faq}
-    <div class="post-cta"><b>Start with a free intro session</b>{ext(book('page-' + pg['slug'] + '-bottom'), 'Book Your Free Intro')}</div>
+    {booking_embed('page-' + pg['slug'])}
   </article>
   <section class="who" style="padding:64px 0"><div class="wrap">
     <div class="sec-head"><div class="kicker">From the blog</div><h2>Tips from our coaches.</h2></div>
@@ -371,7 +408,7 @@ def main():
     urls = [("/", today), ("/blog/", POSTS[0]["date"] if POSTS else today)] + [("/guide/", today)] + ([("/strength-guides/", today)] if bundle_on() else []) + [(f"/{pg['slug']}/", today) for pg in PAGES] + [(f"/blog/{p['slug']}/", p["date"]) for p in POSTS]
     write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
           "".join(f"  <url><loc>{BASE}{u}</loc><lastmod>{d}</lastmod></url>\n" for u, d in urls) + "</urlset>\n")
-    write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n")
+    write("robots.txt", "".join(f"User-agent: {a}\nAllow: /\n\n" for a in ["GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "Claude-SearchBot", "PerplexityBot", "Google-Extended", "Bingbot", "*"]) + f"Sitemap: {BASE}/sitemap.xml\n")
     fwd = S["booking_url"]
     book_html = ('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Book Your Intro | ' + e(S["name"]) + '</title><meta name="robots" content="noindex">'
                  '<script>var u=' + json.dumps(fwd) + ';var q=location.search.slice(1);'
@@ -380,6 +417,16 @@ def main():
                  '<noscript><meta http-equiv="refresh" content="0; url=' + e(fwd) + '"></noscript></head>'
                  '<body><a href="' + e(fwd) + '">Book your intro session</a></body></html>')
     write("book/index.html", book_html)
+    llms = [f"# {S['name']}", "", f"> {S['description']}", "",
+            f"- Address: {S['street']}, {S['city']}, {S['region']} {S['postal']} (Buckhead, Atlanta)",
+            f"- Phone / text: {S['phone']}",
+            f"- Book a free intro session: {BASE}/book",
+            "- Sessions: about 50 minutes, coach-led, small groups, customized to each member's fitness level",
+            "- Members-only studio, capped at 150 members", "- Serves busy professionals, moms and active adults of all ages, especially 35-80", "",
+            "## Key pages", f"- [Home]({BASE}/)"] + [f"- [{x['title']}]({BASE}/{x['slug']}/): {x['meta']}" for x in PAGES] + [
+            f"- [Free Longevity Strength Guide]({BASE}/guide/)", f"- [Blog]({BASE}/blog/)", "", "## Recent blog posts"] + [
+            f"- [{p['title']}]({BASE}/blog/{p['slug']}/): {excerpt(p)}" for p in POSTS[:20]]
+    write("llms.txt", "\n".join(llms) + "\n")
     write(".nojekyll", "")
     cname = os.path.join(ROOT, "CNAME")
     if S.get("custom_domain"): write("CNAME", S["custom_domain"] + "\n")
