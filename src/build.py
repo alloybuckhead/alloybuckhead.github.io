@@ -47,6 +47,12 @@ def guide_cta(campaign, cls="post-cta guide-cta"):
             f'<a class="btn" href="{guide(campaign)}">Get the Free Guide</a></div>')
 
 
+def studio_video():
+    return ('<video class="tour" controls playsinline preload="metadata" poster="/media/studio-tour-poster.jpg" '
+            'aria-label="Inside Alloy Personal Training Buckhead">'
+            '<source src="/media/studio-tour.mp4" type="video/mp4"></video>')
+
+
 def booking_embed(campaign, heading="Book your free first session + InBody scan"):
     """The GoHighLevel booking calendar right on the page, so visitors can book wherever they are."""
     return (f'<div class="book-embed"><h2>{e(heading)}</h2><p>Pick a time below. Prefer to talk first? '
@@ -172,6 +178,13 @@ def home():
       <div class="card"><span class="num">03</span><h3>Members only</h3><p>Membership is capped at 150, so the studio stays personal and coaching stays hands-on.</p></div>
     </div>
   </div></section>
+  <section class="tour-sec"><div class="wrap tour-grid">
+    {studio_video()}
+    <div><div class="kicker">Inside the studio</div>
+      <h2 class="display" style="font-size:clamp(32px,4.5vw,52px);font-weight:900;text-transform:uppercase">See what a session looks like.</h2>
+      <p style="color:var(--muted);margin:16px 0 28px;font-size:17px">Real members, real coaching, every fitness level. Your first session, with an InBody scan and movement screen, is completely complimentary.</p>
+      {ext(book('home-video'), 'Book Your Free First Session')}</div>
+  </div></section>
   <section class="who"><div class="wrap">
     <div class="sec-head"><div class="kicker">Who we train</div><h2>Built for real schedules and real lives.</h2></div>
     <div class="grid3">
@@ -274,6 +287,7 @@ def landing(pg):
   <article class="post" style="padding-top:56px">
     <h1 style="font-size:clamp(28px,4vw,40px)">{e(pg['title'])}</h1>
     {''.join(parts)}
+    {('<h2>Inside the studio</h2>' + studio_video()) if pg['slug'].startswith('free-first-session') else ''}
     {guide_cta('page-' + pg['slug'])}
     <h2>Frequently asked questions</h2>
     {faq}
